@@ -53,3 +53,18 @@ router.get("/:id", async (req, res) => {
     else 
         res.send(result).status(200);
 });
+
+
+// Add a new post
+router.post("/", async (req, res) => {
+    // Get the collection of posts from the database
+    let collection = await db.collection("posts");
+    // Extract the new post data from the request body
+    let newDocument = req.body;
+    // Add the current date to the new post data
+    newDocument.date = new Date();
+    // Insert the new post document into the collection
+    let result = await collection.insertOne(newDocument);
+    // Send the result of the insertion as a response with status code 200
+    res.send(result).status(200);
+})
