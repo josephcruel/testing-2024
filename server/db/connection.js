@@ -21,3 +21,10 @@ catch(e){
     //logs the error if unsuccessful
     console.error(e)
 }
+
+// Get the Database Reference
+//getting the sample db from the connection object
+let db = connection.db("sample_db")
+
+export default db 
+
