@@ -54,7 +54,6 @@ router.get("/:id", async (req, res) => {
         res.send(result).status(200);
 });
 
-
 // Add a new post
 router.post("/", async (req, res) => {
     // Get the collection of posts from the database
@@ -68,3 +67,21 @@ router.post("/", async (req, res) => {
     // Send the result of the insertion as a response with status code 200
     res.send(result).status(200);
 })
+
+// Update post with new content
+router.patch("/post/:id", async (req, res) => {
+    // Construct the query to find the post by its ID
+    const query = {_id: ObjectId(req.params.id)};
+    // Define the updates to be applied to the post
+    const updates = {
+        $push: {posts: req.body}
+    };
+
+    // Get the collection of posts from the database
+    let collection = await db.collection("posts");
+    // Update the post document with the specified ID
+    let result = await collection.updateOne(query, updates);
+
+    // Send the result of the update operation as a response with status code 200
+    res.send(result).status(200);
+});
