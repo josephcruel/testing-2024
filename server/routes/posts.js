@@ -66,7 +66,7 @@ router.post("/", async (req, res) => {
     let result = await collection.insertOne(newDocument);
     // Send the result of the insertion as a response with status code 200
     res.send(result).status(200);
-})
+});
 
 // Update post with new content
 router.patch("/post/:id", async (req, res) => {
@@ -83,5 +83,20 @@ router.patch("/post/:id", async (req, res) => {
     let result = await collection.updateOne(query, updates);
 
     // Send the result of the update operation as a response with status code 200
+    res.send(result).status(200);
+});
+
+
+// Delete a post
+router.delete("/:id", async (req, res) => {
+    // Construct the query to find the post by its ID
+    const query = {_id: ObjectId(req.params.id)};
+
+    // Get the collection of posts from the database
+    const collection = db.collection("posts");
+    // Delete the post document with the specified ID
+    let result = await collection.deleteOne(query);
+
+    // Send the result of the delete operation as a response with status code 200
     res.send(result).status(200);
 });
