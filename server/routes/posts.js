@@ -11,23 +11,45 @@ import { ObjectId } from "mongodb"
 
 const router = express.Router()
 
-// Routes Definitions 
-router.get("/", async (req, res) => {
-    let collection = await db.collection("posts")
-    let results = await collection.find({})
-        .limit(10)
-        .toArray()
 
-    res.send(results).status(200)
-})
+
+// Routes Definitions
+router.get("/", async (req, res) => {
+    // Get the collection of posts from the database
+    let collection = await db.collection("posts");
+    // Find all posts and limit the results to 10
+    let results = await collection.find({}).limit(10).toArray();
+    // Send the results as a response with status code 200
+    res.send(results).status(200);
+});
 
 // Fetch the latest posts
 router.get("/latest", async (req, res) => {
-    let collection = await db.collection("posts")
+    // Get the collection of posts from the database
+    let collection = await db.collection("posts");
+    // Aggregate pipeline to get the latest 3 posts
     let results = await collection.aggregate([
         {"$assessment": {"student": 1, "title": 1, "date": 1}},
         {"$sort": {"date": -1}},
         {"$limit": 3}
-    ]).toArray()
-    res.send(results).status(200)
-})
+    ]).toArray();
+    // Send the results as a response with status code 200
+    res.send(results).status(200);
+});
+
+// Get a Single Posts/Note
+router.get("/:id", async (req, res) => {
+    // Get the collection of posts from the database
+    let collection = await db.collection("posts");
+    // Construct the query to find the post by its ID
+    let query = {_id: ObjectId(req.param.id)};
+    // Find the post with the specified ID
+    let result = await collection.findOne(query);
+    
+    // If the post is not found, send a "Not Found" response with status code 404
+    if (!result) 
+        res.send("Not Found").status(404);
+    // Otherwise, send the post as a response with status code 200
+    else 
+        res.send(result).status(200);
+});
